@@ -2,13 +2,34 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "building-blocks", "building-blocks", "{5064750C-DA87-4630-B093-26A1B2B68C24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Domain", "src\services\building-blocks\BuildingBlocks.Domain\BuildingBlocks.Domain.csproj", "{A3CB0F61-F878-4A9A-A182-8071DCFF586C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Application", "src\services\building-blocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj", "{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Infrastructure", "src\services\building-blocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj", "{91901B3B-1A2F-4555-A9A1-6612AA306692}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{A3CB0F61-F878-4A9A-A182-8071DCFF586C} = {5064750C-DA87-4630-B093-26A1B2B68C24}
+		{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B} = {5064750C-DA87-4630-B093-26A1B2B68C24}
+		{91901B3B-1A2F-4555-A9A1-6612AA306692} = {5064750C-DA87-4630-B093-26A1B2B68C24}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3CB0F61-F878-4A9A-A182-8071DCFF586C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3CB0F61-F878-4A9A-A182-8071DCFF586C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3CB0F61-F878-4A9A-A182-8071DCFF586C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3CB0F61-F878-4A9A-A182-8071DCFF586C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FDDA663-98B7-4C13-8D3D-1E2505A1DB7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91901B3B-1A2F-4555-A9A1-6612AA306692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91901B3B-1A2F-4555-A9A1-6612AA306692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91901B3B-1A2F-4555-A9A1-6612AA306692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91901B3B-1A2F-4555-A9A1-6612AA306692}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
