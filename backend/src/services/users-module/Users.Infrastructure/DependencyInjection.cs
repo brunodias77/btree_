@@ -8,6 +8,7 @@ using BuildingBlocks.Application.Data;
 using Users.Application.Repositories;
 using Users.Application.Services;
 using Users.Infrastructure.Data.Context;
+using Users.Infrastructure.Data.Repositories;
 using Users.Infrastructure.Data.UnitOfWork;
 using Users.Infrastructure.Services;
 
@@ -51,13 +52,12 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         // Repositories
-        
-        // services.AddScoped<IProfileRepository, ProfileRepository>();
-        // services.AddScoped<IAddressRepository, AddressRepository>();
-        // services.AddScoped<ISessionRepository, SessionRepository>();
-        // services.AddScoped<ILoginHistoryRepository, LoginHistoryRepository>();
-        // services.AddScoped<INotificationRepository, NotificationRepository>();
-        // services.AddScoped<INotificationPreferenceRepository, NotificationPreferenceRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<ISessionRepository, SessionRepository>();
+        services.AddScoped<ILoginHistoryRepository, LoginHistoryRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationPreferenceRepository, NotificationPreferenceRepository>();
 
         // Services
         services.AddScoped<ITokenService, TokenService>();
