@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.24" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.24" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.24">
         <PrivateAssets>all</PrivateAssets>
@@ -21,10 +22,6 @@
       <ProjectReference Include="..\..\building-blocks\BuildingBlocks.Security\BuildingBlocks.Security.csproj" />
       <ProjectReference Include="..\Users.Application\Users.Application.csproj" />
       <ProjectReference Include="..\Users.Domain\Users.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Data\" />
     </ItemGroup>
 
 </Project>
