@@ -4,7 +4,9 @@ using BuildingBlocks.Security;
 using BuildingBlocks.Web;
 using BuildingBlocks.Web.Extensions;
 using BuildingBlocks.Web.Logging;
+using Carts.Application;
 using Serilog;
+using Users.Application;
 using Users.Infrastructure;
 
 
@@ -39,13 +41,13 @@ SerilogApplicationRunner.RunWithSerilog(() =>
     // ============================================
     // Modules
     // ============================================
-    // builder.Services.AddUsersApplication();
+     builder.Services.AddUsersApplication();
      builder.Services.AddUsersInfrastructure(builder.Configuration);
     //
     // builder.Services.AddCatalogApplication();
     // builder.Services.AddCatalogInfrastructure(builder.Configuration);
     //
-    // builder.Services.AddCartsApplication();
+     builder.Services.AddCartsApplication();
 
     // Background Jobs
     builder.Services.AddOutboxProcessorJob();

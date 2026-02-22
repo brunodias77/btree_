@@ -26,6 +26,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Infrastructure", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Application", "src\services\users-module\Users.Application\Users.Application.csproj", "{77D2D5A6-68CC-407B-8F20-946FF599BB32}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "carts", "carts", "{828BB8EC-375F-404E-8CED-2358E8C4E9E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carts.Application", "src\services\carts-module\Carts.Application\Carts.Application.csproj", "{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +46,7 @@ Global
 		{5E80803A-5C36-4335-9E8B-62B8E8F604A5} = {9ED1AE8B-466F-47DE-ABC0-B74D0E3CAFD8}
 		{D9954D6E-2076-4A69-AD08-EAE5B476C39A} = {9ED1AE8B-466F-47DE-ABC0-B74D0E3CAFD8}
 		{77D2D5A6-68CC-407B-8F20-946FF599BB32} = {9ED1AE8B-466F-47DE-ABC0-B74D0E3CAFD8}
+		{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD} = {828BB8EC-375F-404E-8CED-2358E8C4E9E8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A3CB0F61-F878-4A9A-A182-8071DCFF586C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -84,5 +89,9 @@ Global
 		{77D2D5A6-68CC-407B-8F20-946FF599BB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77D2D5A6-68CC-407B-8F20-946FF599BB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77D2D5A6-68CC-407B-8F20-946FF599BB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464DEEF2-32F8-4DCF-A5DA-A42FA49641FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -23,15 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\services\building-blocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
       <ProjectReference Include="..\..\services\building-blocks\BuildingBlocks.Domain\BuildingBlocks.Domain.csproj" />
       <ProjectReference Include="..\..\services\building-blocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
       <ProjectReference Include="..\..\services\building-blocks\BuildingBlocks.Security\BuildingBlocks.Security.csproj" />
       <ProjectReference Include="..\..\services\building-blocks\BuildingBlocks.Web\BuildingBlocks.Web.csproj" />
+      <ProjectReference Include="..\..\services\carts-module\Carts.Application\Carts.Application.csproj" />
       <ProjectReference Include="..\..\services\users-module\Users.Infrastructure\Users.Infrastructure.csproj" />
     </ItemGroup>
 

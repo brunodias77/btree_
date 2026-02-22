@@ -47,7 +47,7 @@ public sealed class OutboxProcessor
 
         if (messages.Count == 0)
         {
-            _logger.LogDebug("Nenhuma mensagem pendente no outbox");
+            _logger.LogInformation("Nenhuma mensagem pendente no outbox");
             return;
         }
 
