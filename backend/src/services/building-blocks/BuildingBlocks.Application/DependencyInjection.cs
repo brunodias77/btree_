@@ -27,7 +27,7 @@ public static class DependencyInjection
             config.RegisterServicesFromAssemblies(assemblies);
 
             // Adiciona behaviors do pipeline
-            config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
         // Registra validadores FluentValidation
