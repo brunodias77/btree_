@@ -1,0 +1,72 @@
+<header
+    class="h-20 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md flex items-center justify-between px-8 z-10 shrink-0">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-4">
+        <span class="text-zinc-500 font-mono text-sm uppercase">Admin</span>
+        <span class="text-zinc-700">/</span>
+        <span class="text-[#ccf381] font-bold uppercase tracking-wider">{{ pageTitle }}</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-6">
+        <!-- Notifications -->
+        <div class="relative">
+            <button (click)="toggleNotifications()" class="text-zinc-400 hover:text-white transition-colors relative">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                @if (store.hasUnread()) {
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-[#ccf381] rounded-full"></span>
+                }
+            </button>
+
+            @if (notifOpen()) {
+            <div class="absolute right-0 mt-4 w-80 bg-zinc-950 border border-zinc-800 shadow-2xl z-50 flex flex-col">
+                <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Notificações</h3>
+                    <button (click)="store.markAllRead()"
+                        class="text-[10px] text-[#ccf381] font-mono hover:underline uppercase">Marcar lidas</button>
+                </div>
+
+                <div class="max-h-96 overflow-y-auto divide-y divide-zinc-800">
+                    @for (notif of store.notifications(); track notif.id) {
+                    <div [ngClass]="notif.unread ? 'bg-zinc-950' : 'bg-zinc-900/20'"
+                        class="p-4 hover:bg-zinc-800/50 transition-colors cursor-pointer">
+                        <div class="flex justify-between items-start mb-1">
+                            <span [ngClass]="notif.unread ? 'text-[#ccf381]' : 'text-zinc-500'"
+                                class="text-[10px] font-bold font-mono uppercase">{{ notif.title }}</span>
+                            <span class="text-[10px] text-zinc-600 font-mono">{{ notif.time }}</span>
+                        </div>
+                        <p class="text-xs text-zinc-300 leading-relaxed">{{ notif.message }}</p>
+                    </div>
+                    }
+                </div>
+
+                <div (click)="notifOpen.set(false)"
+                    class="p-3 border-t border-zinc-800 text-center bg-zinc-900 hover:bg-zinc-800 transition-colors cursor-pointer">
+                    <span class="text-[10px] text-zinc-400 font-mono uppercase tracking-widest">Ver todas</span>
+                </div>
+
+            </div>
+            }
+
+        </div>
+
+        <div class="h-8 w-[1px] bg-zinc-800"></div>
+
+        <!-- User -->
+        <div class="flex items-center gap-3 cursor-pointer group">
+            <div
+                class="w-8 h-8 bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-mono font-bold text-[#ccf381] group-hover:border-[#ccf381] transition-colors">
+                AD
+            </div>
+            <div class="flex flex-col">
+                <span
+                    class="text-xs font-bold text-white uppercase leading-none group-hover:text-[#ccf381] transition-colors">Admin
+                    User</span>
+                <span class="text-[10px] text-zinc-500 font-mono uppercase">Super Admin</span>
+            </div>
+        </div>
+    </div>
+</header>

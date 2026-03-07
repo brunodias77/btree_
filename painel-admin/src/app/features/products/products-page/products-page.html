@@ -1,0 +1,94 @@
+<div class="bg-zinc-900 border border-zinc-800 flex flex-col min-h-[600px]">
+    <div class="p-6 border-b border-zinc-800 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <h2 class="text-white font-bold uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#ccf381]" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Produtos
+            </h2>
+            <div class="w-64">
+                <app-input label="" placeholder="BUSCAR SKU / NOME" [(ngModel)]="search" [hasIcon]="true">
+
+                    <svg icon class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+                    </svg>
+
+                </app-input>
+            </div>
+        </div>
+        <a routerLink="/products/new"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-bold uppercase tracking-widest bg-[#ccf381] border-[#ccf381] text-black hover:bg-white transition-all border">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+            </svg>
+            Novo Produto
+        </a>
+    </div>
+
+
+    <table class="w-full text-left">
+        <thead class="bg-zinc-950 text-zinc-500 text-xs font-mono uppercase">
+            <tr>
+                <th class="p-4 font-normal">SKU</th>
+                <th class="p-4 font-normal">Nome</th>
+                <th class="p-4 font-normal">Categoria</th>
+                <th class="p-4 font-normal">Estoque</th>
+                <th class="p-4 font-normal">Preço</th>
+                <th class="p-4 font-normal">Status</th>
+                <th class="p-4 font-normal text-right">Ações</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-800">
+            @if (filtered().length > 0) {
+            @for (prod of filtered(); track prod.id) {
+            <tr class="hover:bg-zinc-800/50 transition-colors">
+                <td class="p-4 font-mono text-zinc-400 text-xs">{{ prod.sku }}</td>
+                <td class="p-4 text-white font-bold uppercase">{{ prod.name }}</td>
+                <td class="p-4 text-zinc-400 text-xs uppercase">{{ prod.category }}</td>
+                <td class="p-4 font-mono text-zinc-300">{{ prod.stock }}</td>
+                <td class="p-4 font-mono text-zinc-300">{{ prod.price }}</td>
+                <td class="p-4"><app-status-badge [status]="prod.status" /></td>
+                <td class="p-4 text-right">
+                    <button class="text-zinc-500 hover:text-[#ccf381] transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="19" cy="12" r="1" />
+                            <circle cx="5" cy="12" r="1" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            }
+            } @else {
+            <tr>
+                <td colspan="7" class="p-8 text-center">
+                    <div class="flex flex-col items-center gap-2 text-zinc-500">
+                        <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="font-mono text-xs uppercase">Nenhum produto encontrado para "{{ search() }}"</span>
+                    </div>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div
+        class="p-4 border-t border-zinc-800 flex justify-between items-center text-xs font-mono uppercase text-zinc-500">
+        <span>A mostrar {{ filtered().length }} de {{ store.products().length }} produtos</span>
+        <div class="flex gap-2">
+            <button class="hover:text-white disabled:opacity-50">← Anterior</button>
+            <button class="hover:text-white">Próximo →</button>
+        </div>
+    </div>
+
+</div>

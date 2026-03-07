@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+    /* 🎨 Cores */
+    --color-brand: #ccf381;
+    --color-dark: #09090b;
+    --color-surface: #18181b;
+
+    /* 🔤 Fontes */
+    --font-sans: "Inter", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+
+    /* 🎞️ Animações */
+    --animate-fade-in: fade-in 0.2s ease-in-out;
+}
+
+/* Definição do keyframe */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@layer base {
+    body {
+        @apply bg-dark text-zinc-50 font-sans antialiased;
+    }
+}
