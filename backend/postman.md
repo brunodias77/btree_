@@ -421,6 +421,41 @@ Atualiza os dados de um produto existente. O ID deve vir mapeado na Rota (`{{pro
       "heightInCm": 0.83,
       "seoTitle": "Comprar IPhone 15 Pro Max 512GB - Melhor Preço",
       "seoDescription": "Aproveite a oferta do IPhone 15 Pro Max de 512GB atualizada."
-  }
   ```
   *(Nota: Todos campos de Dimensões e SEO também são opcionais aqui, assim como o `barcode`. Mas regras rígidas como a formatação sem espaços do SKU continuam implacáveis).*
+
+---
+
+## 22. Delete Product
+Realiza a exclusão lógica (Soft Delete) de um produto do catálogo. Ele será ocultado visualmente e desativado. Porém, seu rastro e dependência histórica permanece intacto no Banco de Dados. Lançará um erro 400 Bad Request se tentarem deletar um produto com estoque preso ativamente (`ReservedStock > 0`). Chamadas duplicadas contra um produto já deletado devolvem 204 No Content para garantir Idempotência. Requer perfil de `Admin`.
+
+- **Method**: `DELETE`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body**: *Nenhum (empty)*
+
+---
+
+## 23. Get Products
+Realiza a listagem paginada e projetada contendo múltiplas dinâmicas de filtros (`SearchTerm`, `BrandId`, `CategoryId`, etc.) focado em alta velocidade por carregar objetos estáticos simplificados para GridView, retornando com formato enriquecido usando metadados e estrutura `PagedResult`. Não requer token e é endpoint Público, com exceção da busca de Status `Draft` ou `Inactive` e exibe array vazio caso os parâmetros gerem dead-ends.
+
+- **Method**: `GET`
+- **URL**: `{{baseUrl}}/api/products?pageNumber=1&pageSize=10&sortBy=price&sortDirection=desc&searchTerm=IPhone`
+- **Auth**: Nenhum (Opcional)
+- **QueryParams**:
+  - `pageNumber`: int (default: 1)
+  - `pageSize`: int (default: 10, max: 100)
+  - `sortBy`: string ("Name", "Price", "CreatedAt", "Stock")
+  - `sortDirection`: string ("asc", "desc")
+  - `searchTerm`: string (Busca no nome, categoria ou código do Sku)
+  - `brandId`: guid
+  - `categoryId`: guid
+  - `status`: string
+- **Headers**:
+  - `Content-Type`: `application/json`
+- **Body**: *Nenhum (empty)*
+
+---
