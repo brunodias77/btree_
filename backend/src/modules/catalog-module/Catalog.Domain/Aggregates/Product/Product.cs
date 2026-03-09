@@ -242,6 +242,21 @@ public sealed class Product : AggregateRoot<Guid>
     }
 
     /// <summary>
+    /// Atualiza o SKU do produto.
+    /// </summary>
+    public void UpdateSku(string sku)
+    {
+        if (string.IsNullOrWhiteSpace(sku))
+            throw new ArgumentException("O SKU é obrigatório.", nameof(sku));
+
+        if (Sku == sku)
+            return;
+
+        Sku = sku.Trim().ToUpperInvariant();
+        IncrementVersion();
+    }
+
+    /// <summary>
     /// Atualiza os preços do produto.
     /// </summary>
     public void UpdatePrice(decimal newPrice, decimal? newCompareAtPrice = null, decimal? newCostPrice = null)

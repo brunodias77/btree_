@@ -359,3 +359,68 @@ Remove uma imagem do servidor através da sua URL relativa.
       "timestamp": "2024-03-06T15:16:00Z"
   }
   ```
+
+---
+
+## 20. Create Product
+Cria um novo produto completo no catálogo. Valida deduplicação de SKU, a existência da respectiva Categoria e Marca, e processa dados complementares como Dimensões, Código de Barras e SEO Metadata. O Slug é construído automaticamente baseado no nome. Exige perfil de `Admin`.
+
+- **Method**: `POST`
+- **URL**: `{{baseUrl}}/api/products`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body** (raw JSON):
+  ```json
+  {
+      "name": "IPhone 15 Pro Max 256GB",
+      "description": "O smartphone mais avançado da Apple com chip A17 Pro e titânio.",
+      "brandId": "11111111-1111-1111-1111-111111111111",
+      "categoryId": "22222222-2222-2222-2222-222222222222",
+      "priceAmount": 7500.00,
+      "priceCurrency": "BRL",
+      "sku": "IPH15PM-256-BLK",
+      "barcode": "0194253768128",
+      "initialStock": 50,
+      "weightInGrams": 221,
+      "lengthInCm": 15.99,
+      "widthInCm": 7.67,
+      "heightInCm": 0.83,
+      "seoTitle": "Comprar IPhone 15 Pro Max 256GB - Melhor Preço",
+      "seoDescription": "Aproveite a oferta de IPhone 15 Pro Max 256GB. Original, com garantia Apple."
+  }
+  ```
+  *(Nota: Campos de SEO `seoTitle`, `seoDescription`, e de dimensões junto com o `barcode` e `initialStock` são opcionais. A `brandId` e `categoryId` devem corresponder a Guid's válidos existentes na Base. `priceCurrency` caso omitido será BRL).*
+
+---
+
+## 21. Update Product
+Atualiza os dados de um produto existente. O ID deve vir mapeado na Rota (`{{productId}}`). Campos como SKU e Name (que regera o Slug) possuem checagem garantidora de unicidade para evitar colisões no catálogo. Exige perfil de `Admin`. *(Atualização de estoque ocorre por endpoints apartados e independentes)*.
+
+- **Method**: `PUT`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body** (raw JSON):
+  ```json
+  {
+      "name": "IPhone 15 Pro Max 512GB",
+      "description": "Edição mais avançada do smartphone Apple, alterada e expandida.",
+      "brandId": "11111111-1111-1111-1111-111111111111",
+      "categoryId": "22222222-2222-2222-2222-222222222222",
+      "priceAmount": 8700.00,
+      "priceCurrency": "BRL",
+      "sku": "IPH15PM-512-BLK",
+      "barcode": "0194253768128",
+      "weightInGrams": 221,
+      "lengthInCm": 15.99,
+      "widthInCm": 7.67,
+      "heightInCm": 0.83,
+      "seoTitle": "Comprar IPhone 15 Pro Max 512GB - Melhor Preço",
+      "seoDescription": "Aproveite a oferta do IPhone 15 Pro Max de 512GB atualizada."
+  }
+  ```
+  *(Nota: Todos campos de Dimensões e SEO também são opcionais aqui, assim como o `barcode`. Mas regras rígidas como a formatação sem espaços do SKU continuam implacáveis).*
