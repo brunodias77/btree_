@@ -1,4 +1,4 @@
-namespace Catalog.Application.Features.Brands.Commands.UpdateBrand;
+namespace Catalog.Application.Features.Brands.UpdateBrand;
 
 public record UpdateBrandInput(
     Guid Id,

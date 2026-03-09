@@ -1,7 +1,7 @@
-using Catalog.Application.Features.Brands.Commands.CreateBrand;
-using Catalog.Application.Features.Brands.Commands.DeleteBrand;
-using Catalog.Application.Features.Brands.Commands.UpdateBrand;
-using Catalog.Application.Features.Brands.Queries.GetBrands;
+using Catalog.Application.Features.Brands.CreateBrand;
+using Catalog.Application.Features.Brands.DeleteBrand;
+using Catalog.Application.Features.Brands.GetBrands;
+using Catalog.Application.Features.Brands.UpdateBrand;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Application.Models;

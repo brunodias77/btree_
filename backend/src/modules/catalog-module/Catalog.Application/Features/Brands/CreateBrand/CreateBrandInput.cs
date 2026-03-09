@@ -1,4 +1,4 @@
-namespace Catalog.Application.Features.Brands.Commands.CreateBrand;
+namespace Catalog.Application.Features.Brands.CreateBrand;
 
 public record CreateBrandInput(
     string Name,

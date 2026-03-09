@@ -1,7 +1,7 @@
 using Catalog.Domain.Repositories;
 using Shared.Application.Models;
 
-namespace Catalog.Application.Features.Brands.Queries.GetBrands;
+namespace Catalog.Application.Features.Brands.GetBrands;
 
 public class GetBrandsUseCase : IGetBrandsUseCase
 {

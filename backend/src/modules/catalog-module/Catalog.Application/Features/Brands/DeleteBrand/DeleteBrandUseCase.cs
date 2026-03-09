@@ -3,7 +3,7 @@ using Catalog.Domain.Repositories;
 using Shared.Application.Models;
 using FluentValidation;
 
-namespace Catalog.Application.Features.Brands.Commands.DeleteBrand;
+namespace Catalog.Application.Features.Brands.DeleteBrand;
 
 public class DeleteBrandUseCase : IDeleteBrandUseCase
 {

@@ -5,7 +5,7 @@ using Catalog.Domain.Services;
 using Shared.Application.Models;
 using FluentValidation;
 
-namespace Catalog.Application.Features.Brands.Commands.CreateBrand;
+namespace Catalog.Application.Features.Brands.CreateBrand;
 
 public class CreateBrandUseCase : ICreateBrandUseCase
 {

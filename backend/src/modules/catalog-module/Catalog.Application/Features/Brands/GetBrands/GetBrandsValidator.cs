@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Catalog.Application.Features.Brands.Queries.GetBrands;
+namespace Catalog.Application.Features.Brands.GetBrands;
 
 public class GetBrandsValidator : AbstractValidator<GetBrandsInput>
 {

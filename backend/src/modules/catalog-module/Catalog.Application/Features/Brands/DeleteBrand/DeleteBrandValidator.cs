@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Catalog.Application.Features.Brands.Commands.DeleteBrand;
+namespace Catalog.Application.Features.Brands.DeleteBrand;
 
 public class DeleteBrandValidator : AbstractValidator<DeleteBrandInput>
 {

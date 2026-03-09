@@ -1,4 +1,4 @@
-namespace Catalog.Application.Features.Brands.Queries.GetBrands;
+namespace Catalog.Application.Features.Brands.GetBrands;
 
 public record BrandOutput(
     Guid Id,
