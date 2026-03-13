@@ -139,6 +139,12 @@ public sealed class ProductReview : AggregateRoot<Guid>
         }
         
         IncrementVersion();
+
+        RegisterDomainEvent(new ReviewUpdatedDomainEvent(
+            Id,
+            ProductId,
+            Rating
+        ));
     }
 
     /// <summary>
@@ -146,8 +152,10 @@ public sealed class ProductReview : AggregateRoot<Guid>
     /// </summary>
     public void Approve()
     {
-        if (Status == ReviewStatus.Approved)
-            return;
+        if (Status != ReviewStatus.Pending)
+        {
+            throw new InvalidOperationException("A avaliação não está em estado pendente.");
+        }
 
         Status = ReviewStatus.Approved;
         IncrementVersion();
@@ -217,6 +225,11 @@ public sealed class ProductReview : AggregateRoot<Guid>
 
         base.Delete();
         IncrementVersion();
+
+        RegisterDomainEvent(new ReviewDeletedDomainEvent(
+            Id,
+            ProductId
+        ));
     }
 
     /// <summary>

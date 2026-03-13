@@ -40,4 +40,10 @@ public static class ReviewErrors
 
     public static Error SellerAlreadyResponded =>
         Error.Failure("Review.SellerAlreadyResponded", "O vendedor já respondeu a esta avaliação.");
+
+    public static Error NotOwner =>
+        Error.Forbidden("Review.NotOwner", "Você não tem permissão para modificar esta avaliação porque não é o proprietário.");
+
+    public static Error NotInPendingState =>
+        Error.Validation("Review.NotInPendingState", "A avaliação não se encontra em estado pendente para sofrer esta transição.");
 }

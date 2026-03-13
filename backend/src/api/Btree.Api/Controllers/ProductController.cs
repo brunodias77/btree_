@@ -13,13 +13,22 @@ public class ProductController : ApiControllerBase
 {
     private readonly IAddProductImageUseCase _addProductImageUseCase;
     private readonly IRemoveProductImageUseCase _removeProductImageUseCase;
+    private readonly Catalog.Application.Features.Review.Create.ICreateReviewUseCase _createReviewUseCase;
+    private readonly Catalog.Application.Features.Review.Update.IUpdateReviewUseCase _updateReviewUseCase;
+    private readonly Catalog.Application.Features.Review.Delete.IDeleteReviewUseCase _deleteReviewUseCase;
 
     public ProductController(
         IAddProductImageUseCase addProductImageUseCase,
-        IRemoveProductImageUseCase removeProductImageUseCase)
+        IRemoveProductImageUseCase removeProductImageUseCase,
+        Catalog.Application.Features.Review.Create.ICreateReviewUseCase createReviewUseCase,
+        Catalog.Application.Features.Review.Update.IUpdateReviewUseCase updateReviewUseCase,
+        Catalog.Application.Features.Review.Delete.IDeleteReviewUseCase deleteReviewUseCase)
     {
         _addProductImageUseCase = addProductImageUseCase;
         _removeProductImageUseCase = removeProductImageUseCase;
+        _createReviewUseCase = createReviewUseCase;
+        _updateReviewUseCase = updateReviewUseCase;
+        _deleteReviewUseCase = deleteReviewUseCase;
     }
 
     /// <summary>
@@ -100,4 +109,129 @@ public class ProductController : ApiControllerBase
 
         return NoContent();
     }
+
+    /// <summary>
+    /// Avalia um produto.
+    /// </summary>
+    /// <param name="productId">ID do produto.</param>
+    /// <param name="request">Dados da avaliação.</param>
+    [HttpPost("{productId:guid}/reviews")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<Guid>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> CreateReview(
+        [FromRoute] Guid productId,
+        [FromBody] CreateReviewRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var input = new Catalog.Application.Features.Review.Create.CreateReviewInput(
+            ProductId: productId,
+            Rating: request.Rating,
+            Title: request.Title,
+            Comment: request.Comment);
+
+        var result = await _createReviewUseCase.ExecuteAsync(input, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            if (result.Error.Code == "CATALOG.PRODUCT_NOT_FOUND")
+            {
+                return NotFound(ApiErrorResponse.NotFound(result.Error.Message));
+            }
+            if (result.Error.Code == "ProductReview.Conflict") // The code from ReviewErrors usually has the Aggregate name if it's Conflict
+            {
+                 return Conflict(ApiErrorResponse.Conflict(result.Error.Message));
+            }
+
+            return BadRequest(ApiErrorResponse.BadRequest(result.Error.Code, result.Error.Message));
+        }
+
+        return Created($"/api/products/{productId}/reviews/{result.Value}", ApiResponse<Guid>.Ok(result.Value));
+    }
+
+    /// <summary>
+    /// Atualiza uma avaliação existente de um produto.
+    /// </summary>
+    /// <param name="productId">ID do produto.</param>
+    /// <param name="reviewId">ID da avaliação.</param>
+    /// <param name="request">Novos dados da avaliação.</param>
+    [HttpPut("{productId:guid}/reviews/{reviewId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateReview(
+        [FromRoute] Guid productId,
+        [FromRoute] Guid reviewId,
+        [FromBody] UpdateReviewRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var input = new Catalog.Application.Features.Review.Update.UpdateReviewInput(
+            ReviewId: reviewId,
+            Rating: request.Rating,
+            Title: request.Title,
+            Comment: request.Comment);
+
+        var result = await _updateReviewUseCase.ExecuteAsync(input, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            if (result.Error.Code == "ProductReview.NotFound")
+            {
+                return NotFound(ApiErrorResponse.NotFound(result.Error.Message));
+            }
+            if (result.Error.Code == "Review.NotOwner" || result.Error.Code == "Unauthorized")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, ApiErrorResponse.Forbidden(result.Error.Message));
+            }
+
+            return BadRequest(ApiErrorResponse.BadRequest(result.Error.Code, result.Error.Message));
+        }
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Exclui uma avaliação existente de um produto (Soft Delete).
+    /// Apenas o autor da avaliação ou um administrador podem executar esta ação.
+    /// </summary>
+    /// <param name="productId">ID do produto.</param>
+    /// <param name="reviewId">ID da avaliação.</param>
+    [HttpDelete("{productId:guid}/reviews/{reviewId:guid}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteReview(
+        [FromRoute] Guid productId,
+        [FromRoute] Guid reviewId,
+        CancellationToken cancellationToken = default)
+    {
+        var input = new Catalog.Application.Features.Review.Delete.DeleteReviewInput(reviewId);
+
+        var result = await _deleteReviewUseCase.ExecuteAsync(input, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            if (result.Error.Code == "ProductReview.NotFound")
+            {
+                return NotFound(ApiErrorResponse.NotFound(result.Error.Message));
+            }
+            if (result.Error.Code == "Review.NotOwner" || result.Error.Code == "Unauthorized")
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, ApiErrorResponse.Forbidden(result.Error.Message));
+            }
+
+            return BadRequest(ApiErrorResponse.BadRequest(result.Error.Code, result.Error.Message));
+        }
+
+        return NoContent();
+    }
 }
+
+public record CreateReviewRequest(int Rating, string? Title, string? Comment);
+public record UpdateReviewRequest(int Rating, string? Title, string? Comment);

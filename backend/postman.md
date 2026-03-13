@@ -481,3 +481,74 @@ Adiciona uma nova imagem a um produto do catálogo. A imagem é fisicamente salv
   ```
 
 ---
+
+## 26. Create Product Review
+Permite que um utilizador autenticado crie uma avaliação (Review) com nota (Rating) e comentário para um produto específico no catálogo.
+
+- **Method**: `POST`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}/reviews`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body (`raw` / `json`)**:
+  ```json
+  {
+      "rating": 5,
+      "title": "Produto Excelente!",
+      "comment": "Superou minhas expectativas, muito bem embalado."
+  }
+  ```
+- **Resposta (201 Created)**:
+  ```json
+  {
+      "success": true,
+      "data": "cf3241bc-82a1-4352-a81d-ef12821ab12c",
+      "timestamp": "2024-03-10T15:20:00Z"
+  }
+  ```
+- **Comportamentos**:
+  - `400 Bad Request` se validações de tamanho falharem ou se a nota não estiver entre 1 e 5.
+  - `404 Not Found` se o produto for inexistente.
+  - `409 Conflict` se o utilizador autenticado já possuir uma avaliação para o referido produto.
+
+---
+
+## 27. Update Product Review
+Permite que um utilizador autenticado atualize uma avaliação (Review) previamente criada por ele. Caso a avaliação seja editada, o status retorna para PENDENTE (caso o sistema exija nova aprovação do texto).
+
+- **Method**: `PUT`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}/reviews/{{reviewId}}`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Content-Type`: `application/json`
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body (`raw` / `json`)**:
+  ```json
+  {
+      "rating": 4,
+      "title": "Produto muito bom",
+      "comment": "Quase excelente, mas a entrega atrasou 1 dia."
+  }
+  ```
+- **Resposta (204 No Content)**: Nenhum conteúdo é retornado no corpo da resposta em caso de sucesso.
+- **Comportamentos**:
+  - `400 Bad Request` se validações de tamanho falharem.
+  - `403 Forbidden` se o utilizador autenticado não for o dono original da avaliação.
+  - `404 Not Found` se a avaliação não for encontrada na base.
+
+---
+
+## 28. Delete Product Review
+Permite a exclusão lógica (Soft Delete) de uma avaliação. Apenas o autor original ou um administrador têm permissões para executar a ação. O Histórico se mantém rastreável no banco de dados para segurança em compliance.
+
+- **Method**: `DELETE`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}/reviews/{{reviewId}}`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body**: *Nenhum (empty)*
+- **Resposta (204 No Content)**: A requisição não apresenta body (void) ao ter sucesso na deleção da review.
+- **Comportamentos**:
+  - `403 Forbidden` se acessar sem papel de `Admin` ou identificação de criador da review alvo (`ownership`).
+  - `404 Not Found` se não encontrar a avaliação, ou ela já estiver listada como Excluída (`IsDeleted`).
