@@ -39,7 +39,7 @@ public static class DependencyInjection
         services.AddScoped<ICatalogUnitOfWork, CatalogUnitOfWork>();
 
         // Serviços de Infraestrutura
-        services.AddScoped<IImageStorageService, S3ImageStorageService>();
+        services.AddScoped<IImageStorageService, LocalImageStorageService>();
         services.AddScoped<ISlugGenerator, SlugGenerator>();
         services.AddScoped<IStockService, StockService>();
 

@@ -459,3 +459,25 @@ Realiza a listagem paginada e projetada contendo múltiplas dinâmicas de filtro
 - **Body**: *Nenhum (empty)*
 
 ---
+
+## 24. Add Image to Product
+Adiciona uma nova imagem a um produto do catálogo. A imagem é fisicamente salva no servidor local (pasta `wwwroot/uploads/products` se Storage Local for mantida) e o evento assíncrono correspondente é ativado. Requer o ID do produto válido e perfil de administrador.
+
+- **Method**: `POST`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}/images`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body** (form-data):
+  - `file`: (File) - O arquivo de imagem (jpg, png, webp - Max. 5MB)
+  - `isPrimary`: (boolean, opcional) - Se marcado como true, substitui a capa do produto.
+- **Resposta (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "data": "/uploads/products/guid_imagem.png",
+      "timestamp": "2024-03-10T15:15:00Z"
+  }
+  ```
+
+---

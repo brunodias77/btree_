@@ -69,7 +69,16 @@ public class ProductReadRepository : IProductReadRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Shared.Application.Models.PagedResult<Product>> GetByFilterPagedAsync(int page, int pageSize, string? searchTerm, Guid? categoryId, CancellationToken cancellationToken = default)
+    public async Task<Shared.Application.Models.PagedResult<Product>> GetByFilterPagedAsync(
+        int page, 
+        int pageSize, 
+        string? searchTerm, 
+        Guid? categoryId, 
+        Guid? brandId, 
+        string? status, 
+        string? orderBy, 
+        string? orderDirection, 
+        CancellationToken cancellationToken = default)
     {
         IQueryable<Product> query = _context.Products
             .AsNoTracking()
@@ -85,10 +94,31 @@ public class ProductReadRepository : IProductReadRepository
             query = query.Where(p => p.CategoryId == categoryId.Value);
         }
 
+        if (brandId.HasValue)
+        {
+            query = query.Where(p => p.BrandId == brandId.Value);
+        }
+        
+        if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<Domain.Enums.ProductStatus>(status, true, out var parsedStatus))
+        {
+            query = query.Where(p => p.Status == parsedStatus);
+        }
+
         var totalCount = await query.CountAsync(cancellationToken);
 
+        // Sorting
+        query = (orderBy?.ToLowerInvariant(), orderDirection?.ToLowerInvariant()) switch
+        {
+            ("price", "asc") => query.OrderBy(p => p.Price),
+            ("price", "desc") => query.OrderByDescending(p => p.Price),
+            ("name", "asc") => query.OrderBy(p => p.Name),
+            ("name", "desc") => query.OrderByDescending(p => p.Name),
+            ("stock", "asc") => query.OrderBy(p => p.Stock),
+            ("stock", "desc") => query.OrderByDescending(p => p.Stock),
+            _ => query.OrderByDescending(p => p.CreatedAt)
+        };
+
         var items = await query
-            .OrderByDescending(p => p.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
