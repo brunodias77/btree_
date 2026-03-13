@@ -478,6 +478,8 @@ public sealed class Product : AggregateRoot<Guid>
         if (image == null) return;
 
         var wasPrimary = image.IsPrimary;
+        var imageUrlOutput = image.Url;
+
         _images.Remove(image);
 
         // Se removeu a primária, definir a primeira como primária
@@ -487,6 +489,8 @@ public sealed class Product : AggregateRoot<Guid>
         }
 
         IncrementVersion();
+
+        RegisterDomainEvent(new ProductImageRemovedDomainEvent(Id, imageId, imageUrlOutput));
     }
 
     /// <summary>
