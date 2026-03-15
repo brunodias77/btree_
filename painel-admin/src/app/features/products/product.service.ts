@@ -27,13 +27,28 @@ export class ProductService {
       this.http.get<ApiResponse<PagedResult<ProductOutput>>>(this.apiUrl, { params: httpParams })
     );
     
-    return response.data;
+    const data = response.data;
+    if (data && data.items) {
+      data.items = data.items.map(item => ({
+        ...item,
+        mainImageUrl: item.mainImageUrl ? (item.mainImageUrl.startsWith('http') ? item.mainImageUrl : `${environment.apiUrl}${item.mainImageUrl}`) : null
+      }));
+    }
+    return data;
   }
 
   async getProductById(id: string): Promise<ProductDetailOutput> {
     const response = await firstValueFrom(
       this.http.get<ApiResponse<ProductDetailOutput>>(`${this.apiUrl}/${id}`)
     );
-    return response.data;
+    
+    const data = response.data;
+    if (data && data.images) {
+      data.images = data.images.map(img => ({
+        ...img,
+        url: img.url.startsWith('http') ? img.url : `${environment.apiUrl}${img.url}`
+      }));
+    }
+    return data;
   }
 }

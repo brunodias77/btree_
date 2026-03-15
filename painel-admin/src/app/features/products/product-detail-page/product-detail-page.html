@@ -48,8 +48,8 @@
                 <div class="lg:col-span-1 space-y-4">
                     <!-- Imagem Principal -->
                     <div class="aspect-square bg-zinc-950 border border-zinc-800 relative overflow-hidden flex items-center justify-center">
-                        @if (productResource.value()!.images && productResource.value()!.images.length > 0) {
-                            <img [src]="productResource.value()!.images[0].url" [alt]="productResource.value()!.name" class="w-full h-full object-cover" />
+                        @if (mainImage()) {
+                            <img [src]="mainImage()!.url" [alt]="productResource.value()!.name" class="w-full h-full object-cover" />
                         } @else {
                             <svg class="w-12 h-12 text-zinc-800" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -58,9 +58,9 @@
                     </div>
 
                     <!-- Galeria Miniaturas -->
-                    @if (productResource.value()!.images && productResource.value()!.images.length > 1) {
+                    @if (thumbnailImages().length > 0) {
                         <div class="grid grid-cols-4 gap-2">
-                             @for (image of productResource.value()!.images.slice(1); track image.id) {
+                             @for (image of thumbnailImages(); track image.id) {
                                 <div class="aspect-square bg-zinc-950 border border-zinc-800 overflow-hidden opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
                                      <img [src]="image.url" [alt]="productResource.value()!.name" class="w-full h-full object-cover" />
                                 </div>
