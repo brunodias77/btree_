@@ -6,6 +6,7 @@ using Catalog.Application.Features.Categories.Create;
 using Catalog.Application.Features.Categories.Update;
 using Catalog.Application.Features.Categories.Delete;
 using Catalog.Application.Features.Categories.Get;
+using Catalog.Application.Features.Categories.GetById;
 using Shared.Application.Models;
 
 namespace Btree.Api.Controllers;
@@ -17,17 +18,20 @@ public class CategoryController : ApiControllerBase
     private readonly IUpdateCategoryUseCase _updateCategoryUseCase;
     private readonly IDeleteCategoryUseCase _deleteCategoryUseCase;
     private readonly IGetCategoriesUseCase _getCategoriesUseCase;
+    private readonly IGetCategoryByIdUseCase _getCategoryByIdUseCase;
 
     public CategoryController(
         ICreateCategoryUseCase createCategoryUseCase,
         IUpdateCategoryUseCase updateCategoryUseCase,
         IDeleteCategoryUseCase deleteCategoryUseCase,
-        IGetCategoriesUseCase getCategoriesUseCase)
+        IGetCategoriesUseCase getCategoriesUseCase,
+        IGetCategoryByIdUseCase getCategoryByIdUseCase)
     {
         _createCategoryUseCase = createCategoryUseCase;
         _updateCategoryUseCase = updateCategoryUseCase;
         _deleteCategoryUseCase = deleteCategoryUseCase;
         _getCategoriesUseCase = getCategoriesUseCase;
+        _getCategoryByIdUseCase = getCategoryByIdUseCase;
     }
 
     [HttpPost]
@@ -85,6 +89,18 @@ public class CategoryController : ApiControllerBase
     public async Task<IActionResult> GetCategories([FromQuery] GetCategoriesInput input, CancellationToken cancellationToken)
     {
         var result = await _getCategoriesUseCase.ExecuteAsync(input, cancellationToken);
+
+        return HandleResult(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponse<CategoryOutput>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCategoryById([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var input = new GetCategoryByIdInput(id);
+        var result = await _getCategoryByIdUseCase.ExecuteAsync(input, cancellationToken);
 
         return HandleResult(result);
     }

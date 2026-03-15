@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { PagedResult } from '../../../shared/models/pagination.model';
 import { ApiResponse } from '../../../core/auth/models';
-import { CategoryOutput, GetCategoriesInput, CreateCategoryInput } from '../models/category.types';
+import { CategoryOutput, GetCategoriesInput, CreateCategoryInput, UpdateCategoryRequest } from '../models/category.types';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +44,19 @@ export class CategoryService {
       this.http.post<ApiResponse<string>>(this.apiUrl, input)
     );
     return res.data; // Retrieves the Guid
+  }
+
+  async getCategoryById(id: string): Promise<CategoryOutput> {
+    const res = await firstValueFrom(
+      this.http.get<ApiResponse<CategoryOutput>>(`${this.apiUrl}/${id}`)
+    );
+    return res.data;
+  }
+
+  async updateCategory(id: string, input: UpdateCategoryRequest): Promise<string> {
+    const res = await firstValueFrom(
+      this.http.put<ApiResponse<string>>(`${this.apiUrl}/${id}`, input)
+    );
+    return res.data;
   }
 }

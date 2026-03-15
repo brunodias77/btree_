@@ -26,3 +26,13 @@ export interface CreateCategoryInput {
     metaDescription?: string;
     sortOrder?: number;
 }
+
+export interface UpdateCategoryRequest {
+    name: string;
+    slug?: string;
+    description?: string;
+    imageUrl?: string;
+    metaTitle?: string;
+    metaDescription?: string;
+    sortOrder?: number;
+}

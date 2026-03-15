@@ -59,6 +59,11 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/categories/create-category-page/create-category-page').then(m => m.CreateCategoryPage),
             },
+            {
+                path: 'categories/edit/:id',
+                loadComponent: () =>
+                    import('./features/categories/edit-category-page/edit-category-page').then(m => m.EditCategoryPage),
+            },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     },

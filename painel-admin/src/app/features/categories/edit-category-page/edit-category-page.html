@@ -1,0 +1,113 @@
+<div class="flex flex-col gap-6">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a routerLink="/categories"
+                class="w-10 h-10 bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:border-brand transition-colors">
+                <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </a>
+            <div>
+                <h2 class="text-white font-bold uppercase tracking-wider">Editar Categoria</h2>
+                <p class="text-xs text-zinc-500 font-mono mt-1">
+                    @if(categoryResource.isLoading()) {
+                        Carregando...
+                    } @else {
+                        {{ categoryResource.value()?.id }}
+                    }
+                </p>
+            </div>
+        </div>
+
+        <button type="submit" form="category-form"
+            [disabled]="form.invalid || submitLoading() || categoryResource.isLoading() || categoryResource.error()"
+            class="flex items-center gap-2 px-6 py-3 text-sm font-bold uppercase tracking-widest bg-brand border-brand text-black hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all border">
+            @if(submitLoading()) {
+                <span class="w-4 h-4 rounded-full border-2 border-zinc-900 border-t-transparent animate-spin"></span>
+                Salvando...
+            } @else {
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Salvar Alterações
+            }
+        </button>
+    </div>
+
+    @if (error() || categoryResource.error()) {
+        <div class="bg-red-500/10 border border-red-500 text-red-500 text-sm font-mono uppercase p-4 rounded">
+            {{ error() || 'Falha ao carregar categoria' }}
+        </div>
+    }
+
+    @if (categoryResource.isLoading()) {
+        <div class="p-8 text-center text-zinc-500 font-mono text-sm uppercase">Carregando dados da categoria...</div>
+    } @else if (categoryResource.value()) {
+        <form id="category-form" [formGroup]="form" (ngSubmit)="submit()"
+            class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-zinc-900 border border-zinc-800 p-6 space-y-6">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-4">
+                        Informações Básicas
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-mono text-zinc-500 uppercase">Nome da Categoria *</label>
+                            <input formControlName="name" type="text" placeholder="Ex: Outerwear"
+                                class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white placeholder:text-zinc-600 outline-none focus:border-brand font-mono text-sm uppercase transition-colors" />
+                            @if (form.get('name')?.invalid && form.get('name')?.touched) {
+                            <span class="text-red-500 text-[10px] font-mono">Campo obrigatório</span>
+                            }
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-mono text-zinc-500 uppercase">Slug (URL) *</label>
+                            <input formControlName="slug" type="text" placeholder="ex: outerwear"
+                                class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white placeholder:text-zinc-600 outline-none focus:border-brand font-mono text-sm lowercase transition-colors" />
+                            @if (form.get('slug')?.invalid && form.get('slug')?.touched) {
+                                <span class="text-red-500 text-[10px] font-mono">Campo obrigatório</span>
+                            }
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-mono text-zinc-500 uppercase">Descrição</label>
+                            <textarea formControlName="description" rows="4" placeholder="Descrição opcional..."
+                                class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white placeholder:text-zinc-600 outline-none focus:border-brand font-mono text-sm transition-colors resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-zinc-900 border border-zinc-800 p-6 space-y-6">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-4">
+                        Organização
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-mono text-zinc-500 uppercase">Status *</label>
+                            <select formControlName="status"
+                                class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white outline-none focus:border-brand font-mono text-sm uppercase transition-colors appearance-none cursor-pointer">
+                                <option value="ACTIVE">Active (Ativa)</option>
+                                <option value="INACTIVE">Inactive (Inativa)</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-mono text-zinc-500 uppercase">Categoria Pai</label>
+                            <!-- Pela regra de negócio atual não é possível editar o nó parent de uma categoria via endpoint PUT atual mas deixarei aqui comentado/disabled em UI ou read-only se fosse para suporte futuro -->
+                            <select formControlName="parent"
+                                class="w-full bg-zinc-950 border border-zinc-700 p-3 text-zinc-500 outline-none font-mono text-sm uppercase appearance-none cursor-not-allowed" title="A Categoria Pai não pode ser alterada após a criação" readonly>
+                                <option value="">-- Nenhuma (Raiz) --</option>
+                                @for (cat of rootCategories(); track cat.id) {
+                                <option [value]="cat.id">{{ cat.name }}</option>
+                                }
+                            </select>
+                            <span class="text-[10px] font-mono text-zinc-500">A categoria pai não pode ser editada (limite do UpdateEndpoint)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+</div>
