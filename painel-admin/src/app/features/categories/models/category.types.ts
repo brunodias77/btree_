@@ -7,7 +7,9 @@ export interface CategoryOutput {
     parentId?: string;
     path: string;
     isActive: boolean;
+    description?: string;
     createdAt: string;
+    updatedAt?: string;
 }
 
 export interface GetCategoriesInput extends PagedRequest {

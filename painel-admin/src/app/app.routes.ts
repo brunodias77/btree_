@@ -60,6 +60,11 @@ export const routes: Routes = [
                     import('./features/categories/create-category-page/create-category-page').then(m => m.CreateCategoryPage),
             },
             {
+                path: 'categories/:id',
+                loadComponent: () =>
+                    import('./features/categories/category-detail-page/category-detail-page').then(m => m.CategoryDetailPage),
+            },
+            {
                 path: 'categories/edit/:id',
                 loadComponent: () =>
                     import('./features/categories/edit-category-page/edit-category-page').then(m => m.EditCategoryPage),
