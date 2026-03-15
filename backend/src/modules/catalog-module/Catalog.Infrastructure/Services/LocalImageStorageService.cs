@@ -24,6 +24,7 @@ public class LocalImageStorageService : IImageStorageService
             stream, 
             fileName, 
             "products", 
+            generateUniqueName: false,
             cancellationToken);
 
         return relativeUrl;

@@ -49,9 +49,14 @@ public class AddProductImageUseCase : IAddProductImageUseCase
 
         try
         {
+            // Gerar o novo nome do arquivo: product-01.*, product-02.*, etc.
+            var fileExtension = System.IO.Path.GetExtension(input.FileName);
+            var nextImageNumber = product.Images.Count + 1;
+            var newFileName = $"product-{nextImageNumber:D2}{fileExtension}";
+
             // 3. Upload da Imagem
             var imageUrl = await _imageStorageService.UploadImageAsync(
-                input.FileName,
+                newFileName,
                 input.ImageStream,
                 input.ContentType,
                 cancellationToken);

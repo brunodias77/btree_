@@ -58,7 +58,7 @@ public class ImageController : ApiControllerBase
         try
         {
             await using var stream = file.OpenReadStream();
-            var url = await _fileStorageService.UploadAsync(stream, file.FileName, sanitizedEntity, cancellationToken);
+            var url = await _fileStorageService.UploadAsync(stream, file.FileName, sanitizedEntity, cancellationToken: cancellationToken);
 
             return Ok(ApiResponse<ImageUploadResponse>.Ok(new ImageUploadResponse(url)));
         }

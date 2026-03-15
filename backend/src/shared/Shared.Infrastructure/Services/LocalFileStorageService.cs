@@ -18,7 +18,7 @@ public class LocalFileStorageService : IFileStorageService
         Directory.CreateDirectory(_basePath);
     }
 
-    public async Task<string> UploadAsync(Stream fileStream, string fileName, string entity, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAsync(Stream fileStream, string fileName, string entity, bool generateUniqueName = true, CancellationToken cancellationToken = default)
     {
         // Sanitizar nome da entidade (lowercase, sem caracteres especiais)
         var sanitizedEntity = entity.Trim().ToLowerInvariant();
@@ -30,20 +30,22 @@ public class LocalFileStorageService : IFileStorageService
             throw new InvalidOperationException($"Extensão '{extension}' não é permitida. Extensões válidas: {string.Join(", ", AllowedExtensions)}");
         }
 
-        // Gerar nome único
-        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+        // Gerar nome único ou usar o nome fornecido
+        var finalFileName = generateUniqueName 
+            ? $"{Guid.NewGuid()}{extension}" 
+            : Path.GetFileName(fileName);
 
         // Criar diretório se não existir
         var entityDir = Path.Combine(_basePath, sanitizedEntity);
         Directory.CreateDirectory(entityDir);
 
         // Salvar arquivo
-        var filePath = Path.Combine(entityDir, uniqueFileName);
+        var filePath = Path.Combine(entityDir, finalFileName);
         await using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
         await fileStream.CopyToAsync(outputStream, cancellationToken);
 
         // Retornar URL relativa
-        return $"/uploads/{sanitizedEntity}/{uniqueFileName}";
+        return $"/uploads/{sanitizedEntity}/{finalFileName}";
     }
 
     public Task<bool> DeleteAsync(string relativeUrl, CancellationToken cancellationToken = default)
