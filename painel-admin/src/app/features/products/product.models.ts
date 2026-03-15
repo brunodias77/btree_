@@ -15,7 +15,7 @@ export interface ProductOutput {
 export interface ProductImageOutput {
   id: string;
   url: string;
-  isPrimary: boolean;
+  isMain: boolean;
 }
 
 export interface ProductDetailOutput {
