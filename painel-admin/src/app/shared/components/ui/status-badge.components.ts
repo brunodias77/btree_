@@ -41,10 +41,10 @@ export class StatusBadgeComponent {
   status = input.required<string>();
 
   classes() {
-    return STATUS_CLASSES[this.status()] ?? 'text-zinc-400 border-zinc-600';
+    return STATUS_CLASSES[this.status()?.toUpperCase()] ?? 'text-zinc-400 border-zinc-600';
   }
 
   formatStatus(status: string): string {
-    return status.replace(/_/g, ' ');
+    return status?.toUpperCase()?.replace(/_/g, ' ') || '';
   }
 }

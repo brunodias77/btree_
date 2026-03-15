@@ -49,6 +49,16 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('./features/products/products-page/products-create-page/products-create-page').then(m => m.ProductsCreatePage),
             },
+            {
+                path: 'categories',
+                loadComponent: () =>
+                    import('./features/categories/categories-page/categories-page').then(m => m.CategoriesPage),
+            },
+            {
+                path: 'categories/new',
+                loadComponent: () =>
+                    import('./features/categories/create-category-page/create-category-page').then(m => m.CreateCategoryPage),
+            },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
     },
