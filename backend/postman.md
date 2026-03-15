@@ -1,10 +1,12 @@
-# BTree Backend - Postman Collection (Auth)
+# BTree Backend - Postman Collection
 
-Este documento contém a descrição de todos os endpoints presentes no `AuthController.cs`, formatados de maneira fácil para importar ou criar as requisições manualmente no Postman. A base URL assumida localmente é `https://localhost:5001` (ou a porta configurada no seu launchSettings.json).
+Este documento contém a descrição de todos os endpoints presentes na API, agrupados por módulos, formatados de maneira fácil para importar ou criar as requisições manualmente no Postman. A base URL assumida localmente é `https://localhost:5001` (ou a porta configurada no seu launchSettings.json).
 
 ---
 
-## 1. Register User
+## 🔐 Auth
+
+### 1. Register User
 Cria uma nova conta de usuário.
 
 - **Method**: `POST`
@@ -27,7 +29,7 @@ Cria uma nova conta de usuário.
 
 ---
 
-## 2. Confirm Email
+### 2. Confirm Email
 Confirma o e-mail do usuário recém-registrado, usando o token gerado pelo sistema.
 
 - **Method**: `POST`
@@ -44,7 +46,7 @@ Confirma o e-mail do usuário recém-registrado, usando o token gerado pelo sist
 
 ---
 
-## 3. Resend Confirmation Email
+### 3. Resend Confirmation Email
 Reenvia o link/token de confirmação de conta para contas não validadas.
 
 - **Method**: `POST`
@@ -61,7 +63,7 @@ Reenvia o link/token de confirmação de conta para contas não validadas.
 
 ---
 
-## 4. Login
+### 4. Login
 Realiza o login e devolve os tokens de autenticação (Access e Refresh). Informações adicionais como `IpAddress` e `DeviceName` são lidas através dos Headers `X-Forwarded-For` e `User-Agent`.
 
 - **Method**: `POST`
@@ -80,7 +82,7 @@ Realiza o login e devolve os tokens de autenticação (Access e Refresh). Inform
 
 ---
 
-## 5. Refresh Token
+### 5. Refresh Token
 Gera um novo `AccessToken` e atualiza o `RefreshToken` para estender a sessão sem exigir um novo login.
 
 - **Method**: `POST`
@@ -97,7 +99,7 @@ Gera um novo `AccessToken` e atualiza o `RefreshToken` para estender a sessão s
 
 ---
 
-## 6. Forgot Password
+### 6. Forgot Password
 Solicita um link de redefinição de senha para um endereço de e-mail. Funciona de modo silencioso (retorna 204 No Content sempre) prevenindo que invasores descubram se o e-mail existe na base nativa.
 
 - **Method**: `POST`
@@ -114,7 +116,7 @@ Solicita um link de redefinição de senha para um endereço de e-mail. Funciona
 
 ---
 
-## 7. Reset Password
+### 7. Reset Password
 Redefine a senha do usuário através do link/código de 6 dígitos recebido por e-mail após a solicitação do Forgot Password.
 
 - **Method**: `POST`
@@ -132,7 +134,7 @@ Redefine a senha do usuário através do link/código de 6 dígitos recebido por
 
 ---
 
-## 8. Change Password
+### 8. Change Password
 Permite que um usuário autenticado altere sua própria senha informando a senha atual. Todas as outras sessões ativas serão invalidadas.
 
 - **Method**: `POST`
@@ -152,7 +154,7 @@ Permite que um usuário autenticado altere sua própria senha informando a senha
 
 ---
 
-## 9. Logout
+### 9. Logout
 Encerra a sessão, invalidando e revogando o fluxo para aquele Refresh Token específico.
 
 - **Method**: `POST`
@@ -171,7 +173,27 @@ Encerra a sessão, invalidando e revogando o fluxo para aquele Refresh Token esp
 
 ---
 
-## 10. Create Category
+## 📁 Categories
+
+### 10. Get Categories
+Retorna uma lista paginada de categorias do catálogo. Focada em otimização (Query), não requer perfis de administrador. Permite filtrar por termo de busca, status ou hierarquia de pais e alterar o tamanho da página.
+
+- **Method**: `GET`
+- **URL**: `{{baseUrl}}/api/categories?PageNumber=1&PageSize=10&SearchTerm=&ParentId=&IsActive=`
+- **Auth**: None (ou dependendo da sua necessidade, preencher Bearer)
+- **Parameters (Query)**:
+  - `PageNumber` (int, default: 1)
+  - `PageSize` (int, default: 10, max: 100)
+  - `SearchTerm` (string, opcional)
+  - `ParentId` (guid, opcional)
+  - `IsActive` (bool, opcional)
+- **Headers**:
+  - `Content-Type`: `application/json`
+- **Body**: *Nenhum (empty)*
+
+---
+
+### 11. Create Category
 Cria uma nova categoria no catálogo. Requer autenticação com perfil de `Admin`. O `slug` será gerado automaticamente a partir do nome se não for fornecido. A `parentId` permite aninhar categorias em até 5 níveis de profundidade.
 
 - **Method**: `POST`
@@ -197,7 +219,7 @@ Cria uma nova categoria no catálogo. Requer autenticação com perfil de `Admin
 
 ---
 
-## 11. Update Category
+### 12. Update Category
 Atualiza os dados cadastrais e de SEO de uma categoria existente. Requer autenticação com perfil de `Admin`. Se o `slug` for fornecido ou alterado, a hierarquia (`Path`) será recalculada automaticamente se aplicável.
 
 - **Method**: `PUT`
@@ -222,7 +244,7 @@ Atualiza os dados cadastrais e de SEO de uma categoria existente. Requer autenti
 
 ---
 
-## 12. Delete Category
+### 13. Delete Category
 Exclui logicamente (Soft Delete) uma categoria do catálogo. A operação falhará caso a categoria possua subcategorias atreladas ou produtos contidos nela, garantindo a integridade dos dados. Requer autenticação com perfil de `Admin`.
 
 - **Method**: `DELETE`
@@ -235,25 +257,21 @@ Exclui logicamente (Soft Delete) uma categoria do catálogo. A operação falhar
 
 ---
 
-## 13. Get Categories
-Retorna uma lista paginada de categorias do catálogo. Focada em otimização (Query), não requer perfis de administrador. Permite filtrar por termo de busca, status ou hierarquia de pais e alterar o tamanho da página.
+## 🏷️ Brands
+
+### 14. Get Brands (Paginado)
+Consulta paginada de marcas com filtros opcionais por nome e status de ativação. Endpoint público (sem autenticação obrigatória).
 
 - **Method**: `GET`
-- **URL**: `{{baseUrl}}/api/categories?PageNumber=1&PageSize=10&SearchTerm=&ParentId=&IsActive=`
-- **Auth**: None (ou dependendo da sua necessidade, preencher Bearer)
-- **Parameters (Query)**:
-  - `PageNumber` (int, default: 1)
-  - `PageSize` (int, default: 10, max: 100)
-  - `SearchTerm` (string, opcional)
-  - `ParentId` (guid, opcional)
-  - `IsActive` (bool, opcional)
-- **Headers**:
-  - `Content-Type`: `application/json`
-- **Body**: *Nenhum (empty)*
+- **URL**: `{{baseUrl}}/api/brands?PageNumber=1&PageSize=10`
+- **Parâmetros de Query opcionais**:
+  - `SearchTerm` (string): Busca parcial no nome da marca.
+  - `IsActive` (bool): Filtrar por marcas ativas (`true`) ou inativas (`false`).
+- **Exemplo com filtros**: `{{baseUrl}}/api/brands?PageNumber=1&PageSize=10&SearchTerm=apple&IsActive=true`
 
 ---
 
-## 14. Create Brand
+### 15. Create Brand
 Cria uma nova marca no catálogo. Requer um nome único (unicidade garantida pelo backend). O `Slug` correspondente é gerado automaticamente a partir do nome pelo serviço de domínio. O perfil necessário para a ação é o de `Admin`.
 
 - **Method**: `POST`
@@ -275,7 +293,7 @@ Cria uma nova marca no catálogo. Requer um nome único (unicidade garantida pel
 
 ---
 
-## 15. Update Brand
+### 16. Update Brand
 Atualiza os dados de uma marca existente no catálogo. O ID é submetido via path e os dados no payload. Se houver alteração de nome validada, um novo slug correspondente será gerado sem quebrar a exclusividade. Exige perfil `Admin`.
 
 - **Method**: `PUT`
@@ -296,7 +314,7 @@ Atualiza os dados de uma marca existente no catálogo. O ID é submetido via pat
 
 ---
 
-## 16. Delete Brand
+### 17. Delete Brand
 Exclui logicamente uma marca do catálogo (Soft Delete). A operação não é permitida caso a marca possua produtos vinculados. Exige perfil `Admin`.
 
 - **Method**: `DELETE`
@@ -308,19 +326,9 @@ Exclui logicamente uma marca do catálogo (Soft Delete). A operação não é pe
 
 ---
 
-## 17. Get Brands (Paginado)
-Consulta paginada de marcas com filtros opcionais por nome e status de ativação. Endpoint público (sem autenticação obrigatória).
+## 🖼️ Images
 
-- **Method**: `GET`
-- **URL**: `{{baseUrl}}/api/brands?PageNumber=1&PageSize=10`
-- **Parâmetros de Query opcionais**:
-  - `SearchTerm` (string): Busca parcial no nome da marca.
-  - `IsActive` (bool): Filtrar por marcas ativas (`true`) ou inativas (`false`).
-- **Exemplo com filtros**: `{{baseUrl}}/api/brands?PageNumber=1&PageSize=10&SearchTerm=apple&IsActive=true`
-
----
-
-## 18. Upload Image
+### 18. Upload Image
 Faz o upload de uma imagem para o servidor, organizando-a por entidade (brands, categories, products, etc). Retorna a URL relativa da imagem salva.
 
 - **Method**: `POST`
@@ -343,7 +351,7 @@ Faz o upload de uma imagem para o servidor, organizando-a por entidade (brands, 
 
 ---
 
-## 19. Delete Image
+### 19. Delete Image
 Remove uma imagem do servidor através da sua URL relativa.
 
 - **Method**: `DELETE`
@@ -362,7 +370,71 @@ Remove uma imagem do servidor através da sua URL relativa.
 
 ---
 
-## 20. Create Product
+## 📦 Products
+
+### 20. Get Products
+Realiza a listagem paginada e projetada contendo múltiplas dinâmicas de filtros (`SearchTerm`, `BrandId`, `CategoryId`, etc.) focado em alta velocidade por carregar objetos estáticos simplificados para GridView, retornando com formato enriquecido usando metadados e estrutura `PagedResult`. Não requer token e é endpoint Público, com exceção da busca de Status `Draft` ou `Inactive` e exibe array vazio caso os parâmetros gerem dead-ends.
+
+- **Method**: `GET`
+- **URL**: `{{baseUrl}}/api/products?pageNumber=1&pageSize=10&sortBy=price&sortDirection=desc&searchTerm=IPhone`
+- **Auth**: Nenhum (Opcional)
+- **QueryParams**:
+  - `pageNumber`: int (default: 1)
+  - `pageSize`: int (default: 10, max: 100)
+  - `sortBy`: string ("Name", "Price", "CreatedAt", "Stock")
+  - `sortDirection`: string ("asc", "desc")
+  - `searchTerm`: string (Busca no nome, categoria ou código do Sku)
+  - `brandId`: guid
+  - `categoryId`: guid
+  - `status`: string
+- **Headers**:
+  - `Content-Type`: `application/json`
+- **Body**: *Nenhum (empty)*
+
+---
+
+### 21. Get Product By Id
+Obtém os detalhes completos de um produto específico através de seu identificador único (ID). Retorna todos os dados agregados, incluindo a Marca, Categoria e Imagens (se disponíveis). Não requer token (pode ser público para visualização do produto na loja, dependendo das regras de negócio, mas a estrutura base está pronta).
+
+- **Method**: `GET`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}`
+- **Auth**: Nenhum (Opcional)
+- **Parameters (Path)**:
+  - `productId` (guid): ID do produto a ser buscado.
+- **Headers**:
+  - `Content-Type`: `application/json`
+- **Body**: *Nenhum (empty)*
+- **Resposta (200 OK)**:
+  ```json
+  {
+      "success": true,
+      "data": {
+          "id": "33333333-3333-3333-3333-333333333333",
+          "name": "IPhone 15 Pro Max 512GB",
+          "description": "Edição mais avançada do smartphone Apple, alterada e expandida.",
+          "sku": "IPH15PM-512-BLK",
+          "price": 8700.00,
+          "quantityInStock": 50,
+          "status": "Active",
+          "brandName": "Apple",
+          "categoryName": "Eletrônicos e Smartphones",
+          "images": [
+              {
+                  "id": "44444444-4444-4444-4444-444444444444",
+                  "url": "/uploads/products/iphone15.jpg",
+                  "isMain": true
+              }
+          ]
+      },
+      "timestamp": "2024-03-10T15:00:00Z"
+  }
+  ```
+- **Comportamentos**:
+  - `404 Not Found` se o produto com o ID especificado não existir.
+
+---
+
+### 22. Create Product
 Cria um novo produto completo no catálogo. Valida deduplicação de SKU, a existência da respectiva Categoria e Marca, e processa dados complementares como Dimensões, Código de Barras e SEO Metadata. O Slug é construído automaticamente baseado no nome. Exige perfil de `Admin`.
 
 - **Method**: `POST`
@@ -395,7 +467,7 @@ Cria um novo produto completo no catálogo. Valida deduplicação de SKU, a exis
 
 ---
 
-## 21. Update Product
+### 23. Update Product
 Atualiza os dados de um produto existente. O ID deve vir mapeado na Rota (`{{productId}}`). Campos como SKU e Name (que regera o Slug) possuem checagem garantidora de unicidade para evitar colisões no catálogo. Exige perfil de `Admin`. *(Atualização de estoque ocorre por endpoints apartados e independentes)*.
 
 - **Method**: `PUT`
@@ -421,12 +493,13 @@ Atualiza os dados de um produto existente. O ID deve vir mapeado na Rota (`{{pro
       "heightInCm": 0.83,
       "seoTitle": "Comprar IPhone 15 Pro Max 512GB - Melhor Preço",
       "seoDescription": "Aproveite a oferta do IPhone 15 Pro Max de 512GB atualizada."
+  }
   ```
   *(Nota: Todos campos de Dimensões e SEO também são opcionais aqui, assim como o `barcode`. Mas regras rígidas como a formatação sem espaços do SKU continuam implacáveis).*
 
 ---
 
-## 22. Delete Product
+### 24. Delete Product
 Realiza a exclusão lógica (Soft Delete) de um produto do catálogo. Ele será ocultado visualmente e desativado. Porém, seu rastro e dependência histórica permanece intacto no Banco de Dados. Lançará um erro 400 Bad Request se tentarem deletar um produto com estoque preso ativamente (`ReservedStock > 0`). Chamadas duplicadas contra um produto já deletado devolvem 204 No Content para garantir Idempotência. Requer perfil de `Admin`.
 
 - **Method**: `DELETE`
@@ -439,28 +512,7 @@ Realiza a exclusão lógica (Soft Delete) de um produto do catálogo. Ele será 
 
 ---
 
-## 23. Get Products
-Realiza a listagem paginada e projetada contendo múltiplas dinâmicas de filtros (`SearchTerm`, `BrandId`, `CategoryId`, etc.) focado em alta velocidade por carregar objetos estáticos simplificados para GridView, retornando com formato enriquecido usando metadados e estrutura `PagedResult`. Não requer token e é endpoint Público, com exceção da busca de Status `Draft` ou `Inactive` e exibe array vazio caso os parâmetros gerem dead-ends.
-
-- **Method**: `GET`
-- **URL**: `{{baseUrl}}/api/products?pageNumber=1&pageSize=10&sortBy=price&sortDirection=desc&searchTerm=IPhone`
-- **Auth**: Nenhum (Opcional)
-- **QueryParams**:
-  - `pageNumber`: int (default: 1)
-  - `pageSize`: int (default: 10, max: 100)
-  - `sortBy`: string ("Name", "Price", "CreatedAt", "Stock")
-  - `sortDirection`: string ("asc", "desc")
-  - `searchTerm`: string (Busca no nome, categoria ou código do Sku)
-  - `brandId`: guid
-  - `categoryId`: guid
-  - `status`: string
-- **Headers**:
-  - `Content-Type`: `application/json`
-- **Body**: *Nenhum (empty)*
-
----
-
-## 24. Add Image to Product
+### 25. Add Image to Product
 Adiciona uma nova imagem a um produto do catálogo. A imagem é fisicamente salva no servidor local (pasta `wwwroot/uploads/products` se Storage Local for mantida) e o evento assíncrono correspondente é ativado. Requer o ID do produto válido e perfil de administrador.
 
 - **Method**: `POST`
@@ -482,7 +534,22 @@ Adiciona uma nova imagem a um produto do catálogo. A imagem é fisicamente salv
 
 ---
 
-## 26. Create Product Review
+### 26. Remove Image from Product
+Remove logicamente/fisicamente uma imagem associada a um produto do catálogo. Exige perfil de `Admin`.
+
+- **Method**: `DELETE`
+- **URL**: `{{baseUrl}}/api/products/{{productId}}/images/{{imageId}}`
+- **Auth**: Bearer Token
+- **Headers**:
+  - `Authorization`: `Bearer {{accessToken}}`
+- **Body**: *Nenhum (empty)*
+- **Resposta (204 No Content)**: Nenhum conteúdo é retornado no corpo da resposta em caso de sucesso.
+- **Comportamentos**:
+  - `404 Not Found` se o produto ou a imagem não existirem.
+
+---
+
+### 27. Create Product Review
 Permite que um utilizador autenticado crie uma avaliação (Review) com nota (Rating) e comentário para um produto específico no catálogo.
 
 - **Method**: `POST`
@@ -514,7 +581,7 @@ Permite que um utilizador autenticado crie uma avaliação (Review) com nota (Ra
 
 ---
 
-## 27. Update Product Review
+### 28. Update Product Review
 Permite que um utilizador autenticado atualize uma avaliação (Review) previamente criada por ele. Caso a avaliação seja editada, o status retorna para PENDENTE (caso o sistema exija nova aprovação do texto).
 
 - **Method**: `PUT`
@@ -539,7 +606,7 @@ Permite que um utilizador autenticado atualize uma avaliação (Review) previame
 
 ---
 
-## 28. Delete Product Review
+### 29. Delete Product Review
 Permite a exclusão lógica (Soft Delete) de uma avaliação. Apenas o autor original ou um administrador têm permissões para executar a ação. O Histórico se mantém rastreável no banco de dados para segurança em compliance.
 
 - **Method**: `DELETE`

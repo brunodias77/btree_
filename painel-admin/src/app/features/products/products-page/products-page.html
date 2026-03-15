@@ -10,7 +10,7 @@
                 Produtos
             </h2>
             <div class="w-64">
-                <app-input label="" placeholder="BUSCAR SKU / NOME" [(ngModel)]="search" [hasIcon]="true">
+                <app-input label="" placeholder="BUSCAR SKU / NOME" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" [hasIcon]="true">
 
                     <svg icon class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
@@ -44,23 +44,20 @@
             </tr>
         </thead>
         <tbody class="divide-y divide-zinc-800">
-            @if (filtered().length > 0) {
-            @for (prod of filtered(); track prod.id) {
+            @if (pagedProducts().items.length > 0) {
+            @for (prod of pagedProducts().items; track prod.id) {
             <tr class="hover:bg-zinc-800/50 transition-colors">
                 <td class="p-4 font-mono text-zinc-400 text-xs">{{ prod.sku }}</td>
-                <td class="p-4 text-white font-bold uppercase">{{ prod.name }}</td>
-                <td class="p-4 text-zinc-400 text-xs uppercase">{{ prod.category }}</td>
-                <td class="p-4 font-mono text-zinc-300">{{ prod.stock }}</td>
-                <td class="p-4 font-mono text-zinc-300">{{ prod.price }}</td>
+                <td class="p-4 text-white font-bold">{{ prod.name }}</td>
+                <td class="p-4 text-zinc-400 text-xs">{{ prod.categoryName }}</td>
+                <td class="p-4 font-mono text-zinc-300">{{ prod.stockQuantity }}</td>
+                <td class="p-4 font-mono text-zinc-300">{{ prod.currency }} {{ prod.price }}</td>
                 <td class="p-4"><app-status-badge [status]="prod.status" /></td>
                 <td class="p-4 text-right">
-                    <button class="text-zinc-500 hover:text-[#ccf381] transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="1" />
-                            <circle cx="19" cy="12" r="1" />
-                            <circle cx="5" cy="12" r="1" />
-                        </svg>
-                    </button>
+                    <a [routerLink]="['/products/details', prod.id]" 
+                       class="text-zinc-500 font-bold uppercase text-xs hover:text-[#ccf381] hover:underline transition-colors tracking-widest">
+                        Ver
+                    </a>
                 </td>
             </tr>
             }
@@ -74,7 +71,7 @@
                                 d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
                                 stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="font-mono text-xs uppercase">Nenhum produto encontrado para "{{ search() }}"</span>
+                        <span class="font-mono text-xs uppercase">Nenhum produto encontrado.</span>
                     </div>
                 </td>
             </tr>
@@ -84,10 +81,10 @@
 
     <div
         class="p-4 border-t border-zinc-800 flex justify-between items-center text-xs font-mono uppercase text-zinc-500">
-        <span>A mostrar {{ filtered().length }} de {{ store.products().length }} produtos</span>
+        <span>A mostrar {{ pagedProducts().items.length }} de {{ pagedProducts().totalCount }} produtos</span>
         <div class="flex gap-2">
-            <button class="hover:text-white disabled:opacity-50">← Anterior</button>
-            <button class="hover:text-white">Próximo →</button>
+            <button class="hover:text-white disabled:opacity-50" [disabled]="!pagedProducts().hasPreviousPage" (click)="previousPage()">← Anterior</button>
+            <button class="hover:text-white disabled:opacity-50" [disabled]="!pagedProducts().hasNextPage" (click)="nextPage()">Próximo →</button>
         </div>
     </div>
 

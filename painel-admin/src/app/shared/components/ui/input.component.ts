@@ -36,7 +36,7 @@ let nextUniqueId = 0;
           (blur)="onTouchedAction()"
           [placeholder]="placeholder"
           [disabled]="disabled()"
-          class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#ccf381] font-mono text-sm uppercase transition-colors"
+          class="w-full bg-zinc-950 border border-zinc-700 p-3 text-white placeholder:text-zinc-600 outline-none focus:border-brand font-mono text-sm uppercase transition-colors"
           [class.pr-12]="type === 'password'"
           [class.pl-10]="hasIcon"
           [class.border-red-600]="showError"

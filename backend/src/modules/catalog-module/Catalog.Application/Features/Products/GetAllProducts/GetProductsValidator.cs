@@ -24,10 +24,10 @@ public class GetProductsValidator : AbstractValidator<GetProductsInput>
         When(x => !string.IsNullOrEmpty(x.SortDirection), () =>
         {
             RuleFor(x => x.SortDirection)
-                .Must(dir => dir.Equals("asc", StringComparison.OrdinalIgnoreCase) || 
-                             dir.Equals("desc", StringComparison.OrdinalIgnoreCase) ||
-                             dir.Equals("ascending", StringComparison.OrdinalIgnoreCase) ||
-                             dir.Equals("descending", StringComparison.OrdinalIgnoreCase))
+                .Must(dir => string.Equals(dir, "asc", StringComparison.OrdinalIgnoreCase) || 
+                             string.Equals(dir, "desc", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(dir, "ascending", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(dir, "descending", StringComparison.OrdinalIgnoreCase))
                 .WithMessage("Direção de ordenação inválida. Use 'asc' ou 'desc'.");
         });
     }

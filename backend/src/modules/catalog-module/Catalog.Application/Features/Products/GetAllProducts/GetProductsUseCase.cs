@@ -58,8 +58,8 @@ public class GetProductsUseCase : IGetProductsUseCase
             Price: product.Price,
             Currency: "BRL", // Based on previous default pattern mapping
             StockQuantity: product.Stock,
-            BrandName: product.BrandId.ToString(), // The Entity may not have initialized the navigation property 'Brand' right here depending on tracking and projection in EF. Eager loading is advised on Repo level.
-            CategoryName: product.CategoryId.ToString(), 
+            BrandName: product.BrandId?.ToString() ?? string.Empty,
+            CategoryName: product.CategoryId?.ToString() ?? string.Empty, 
             Status: product.Status.ToString(),
             MainImageUrl: product.Images.FirstOrDefault(img => img.IsPrimary)?.Url ?? product.Images.FirstOrDefault()?.Url
         ));

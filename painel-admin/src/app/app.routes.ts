@@ -50,6 +50,11 @@ export const routes: Routes = [
                     import('./features/products/products-page/products-create-page/products-create-page').then(m => m.ProductsCreatePage),
             },
             {
+                path: 'products/details/:id',
+                loadComponent: () =>
+                    import('./features/products/product-detail-page/product-detail-page').then(m => m.ProductDetailPage),
+            },
+            {
                 path: 'categories',
                 loadComponent: () =>
                     import('./features/categories/categories-page/categories-page').then(m => m.CategoriesPage),
