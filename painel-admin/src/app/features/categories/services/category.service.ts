@@ -59,4 +59,11 @@ export class CategoryService {
     );
     return res.data;
   }
+
+  async deleteCategory(id: string): Promise<string> {
+    const res = await firstValueFrom(
+      this.http.delete<ApiResponse<string>>(`${this.apiUrl}/${id}`)
+    );
+    return res.data;
+  }
 }
